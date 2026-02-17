@@ -1,250 +1,241 @@
 <!DOCTYPE html>
-<html manifest="./PSFree.manifest">
+<html manifest="./PSFree.manifest" lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>بليغ ستور 2</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --dark-navy: #050a12;
-            --electric-blue: #00adef;
-            --panel-bg: rgba(15, 25, 40, 0.9);
-            --text-white: #ffffff;
-        }
-        body {
-            background: var(--dark-navy) radial-gradient(circle at top, #122136 0%, var(--dark-navy) 80%);
-            color: var(--text-white);
-            font-family: 'Cairo', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        #cache-status {
-            display: none;
-            position: fixed; top: 0; width: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000;
-            text-align: center; padding: 15px 0;
-            border-bottom: 2px solid var(--electric-blue);
-        }
-        #cache-bar {
-            height: 4px;
-            background: var(--electric-blue);
-            width: 0%;
-            transition: width 0.3s;
-            position: absolute;
-            bottom: 0;
-            box-shadow: 0 0 10px var(--electric-blue);
-        }
-        .bg-logo-watermark {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 40vw; font-weight: 900;
-            color: var(--electric-blue);
-            opacity: 0.04;
-            z-index: -1; letter-spacing: -3.5vw;
-            font-style: italic; pointer-events: none; user-select: none;
-        }
-        .header {
-            margin-top: 40px;
-            text-align: center;
-        }
-        .header-title {
-            font-size: 3.2rem;
-            font-weight: 800;
-            margin: 0;
-            text-shadow: 0 0 25px var(--electric-blue);
-        }
-        .header-subtitle {
-            font-size: 1.4rem;
-            color: var(--electric-blue);
-            letter-spacing: 4px;
-            margin-top: -10px;
-        }
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding-bottom: 60px;
-        }
-        #PS4FW {
-            color: var(--electric-blue);
-            background: rgba(0,0,0,0.5);
-            padding: 5px 20px;
-            border-radius: 20px;
-            font-size: 1.1rem;
-            border: 1px solid rgba(0, 173, 239, 0.2);
-            margin-bottom: 18px;
-        }
-        .ps-trigger {
-            width: 170px; height: 170px;
-            background: radial-gradient(circle, #102542 0%, #070e1a 100%);
-            border: 3px solid var(--electric-blue);
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-        }
-        .ps-trigger:hover { transform: scale(1.08); border-color: white; }
-        .ps-trigger svg { width: 90px; fill: white; }
-        /* قائمة البايلودات */
-        .payload-panel {
-            display: none;
-            margin: 40px auto 0 auto;
-            background: var(--panel-bg);
-            padding: 24px 16px;
-            border-radius: 20px;
-            box-shadow: 0 6px 34px #15162a55;
-            max-width: 370px; min-width: 220px;
-            text-align: center;
-            animation: fadeIn .7s;
-        }
-        .payload-panel h2 {
-            margin: 0 0 16px 0;
-            font-size: 1.5em;
-            color: var(--electric-blue);
-            letter-spacing: 2px;
-        }
-        .payload-btn {
-            width: 80%;
-            margin: 9px 0;
-            background: var(--electric-blue);
-            color: var(--dark-navy);
-            font-weight: bold;
-            padding: 13px 0;
-            border: none;
-            border-radius: 13px;
-            font-size: 1.16em;
-            box-shadow: 0 3px 15px #00adef3b;
-            cursor: pointer;
-            transition: background .17s, color .16s;
-        }
-        .payload-btn:hover {
-            background: #06c1ff;
-            color: #fff;
-        }
-        .footer-address {
-            background: rgba(5, 10, 20, 0.96);
-            border-top: 2px solid var(--electric-blue);
-            padding: 16px 0 12px 0;
-            text-align: center;
-            font-size: 1em;
-            letter-spacing: 1.5px;
-        }
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(25px);}
-            100%{ opacity: 1; transform: translateY(0);}
-        }
-    </style>
-    <!-- JavaScript خاص بالكاش -->
-    <script>
-        function DLProgress(e) {
-            if (e.total > 0) {
-                var percent = Math.round(e.loaded / e.total * 100);
-                document.getElementById('cache-status').style.display = 'block';
-                document.getElementById('cache-bar').style.width = percent + '%';
-                document.getElementById('cache-text').innerHTML = 'جاري تنزيل الصفحة: ' + percent + '%';
-            }
-        }
-        function DisplayCacheProgress() {
-            document.getElementById('cache-text').innerHTML = 'تم تنزيل الصفحة بنجاح قم باغلاق المتصفح وقطع اتصال الانترنت وافتح المتصفح من جديد';
-            document.getElementById('cache-bar').style.width = '100%';
-            setTimeout(function() {
-                document.getElementById('cache-status').style.display = 'none';
-            }, 5000);
-        }
-        window.applicationCache.addEventListener("progress", DLProgress, false);
-        window.applicationCache.oncached = function(e) { DisplayCacheProgress(); };
-        window.applicationCache.onupdateready = function(e) { DisplayCacheProgress(); };
-    </script>
+  <meta charset="UTF-8">
+  <title>بليغ ستور 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --dark-navy: #050a12;
+      --electric-blue: #00adef;
+      --panel-bg: rgba(15, 25, 40, 0.9);
+      --text-white: #ffffff;
+      --btn-border: #1fa9dc;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(ellipse at top, #152132 0%, #050a12 100%) fixed;
+      color: var(--text-white);
+      font-family: 'Cairo', Arial, sans-serif;
+      overflow-x: hidden;
+      direction: rtl;
+      min-height: 100vh;
+      width: 100vw;
+    }
+    .bg-logo-watermark {
+      position: fixed;
+      top: 57%;
+      left: 51%;
+      transform: translate(-50%, -50%);
+      font-size: 41vw;
+      font-weight: 900;
+      color: var(--electric-blue);
+      opacity: 0.055;
+      z-index: 0;
+      font-style: italic;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -4vw;
+    }
+    .side-menu {
+      position: absolute;
+      right: 32px;
+      top: 32%;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 23px;
+      min-width: 170px;
+    }
+    .menu-btn {
+      font-family: 'Cairo', Arial, sans-serif;
+      background: transparent;
+      border: 2px solid var(--btn-border);
+      color: var(--text-white);
+      padding: 18px 0;
+      border-radius: 15px;
+      font-size: 1.25em;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      transition: box-shadow .18s, background .2s, color 0.2s;
+      text-shadow: 0 1px 6px #001, 0 0 1px #1fa9dc40;
+      margin-bottom: 3px;
+      box-shadow: none;
+    }
+    .menu-btn:hover, .menu-btn:focus {
+      background: var(--btn-border);
+      color: #0f222f;
+      box-shadow: 0 2px 10px #00adef51;
+    }
+    .main-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 92vh;
+      z-index: 2;
+    }
+    .header-title {
+      margin-top: 56px;
+      margin-bottom: 10px;
+      font-size: 3.9em;
+      font-weight: 900;
+      letter-spacing: 2.2px;
+      color: var(--text-white);
+      filter: drop-shadow(0 7px 24px #0099ff88);
+      text-shadow: 0 0 18px #00adefdd, 0 16px 32px #01152957;
+      text-align: center;
+      z-index: 2;
+    }
+    .header-subtitle {
+      font-size: 1.6em;
+      color: #06b6d4;
+      margin-top: -6px;
+      letter-spacing: 4px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+    #PS4FW {
+      background:rgba(8,60,90, 0.71);
+      padding: 9px 28px;
+      border-radius: 14px;
+      display: inline-block;
+      font-size: 1.2em;
+      color: #1fa9dc;
+      font-weight:900;
+      border: 1.4px solid #053557;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 11px #04385f40;
+      z-index:2;
+      text-align: center;
+    }
+    #jailbreak-page {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      width: 100%;
+      min-height: 150px;
+      z-index:2;
+    }
+    .ps-btn {
+      width: 190px;
+      height: 190px;
+      border-radius: 99px;
+      background: rgba(10,26,50,0.77);
+      border: 4px solid var(--btn-border);
+      margin: 0 auto;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-bottom: 5px;
+      box-shadow: 0 3px 32px #0099ff11, 0 0px 0 #fff;
+      transition: box-shadow .2s, border .22s, background 0.21s;
+    }
+    .ps-btn svg {
+      width: 85px;
+      height: 85px;
+      fill: var(--electric-blue);
+      transition: fill 0.2s;
+      filter: drop-shadow(0 3px 9px #00e7ff90);
+    }
+    .ps-btn:hover {
+      background: #03395a;
+      box-shadow:0 4px 24px #03c2e470;
+      border-color: #fff;
+    }
+    .ps-btn:hover svg { fill: #fff; }
+    .footer-address {
+      background: rgba(5, 10, 20, 0.96);
+      border-top: 2px solid var(--btn-border);
+      padding: 18px 0 11px 0;
+      text-align: center;
+      width: 100vw;
+      color: #f2f2f2;
+      font-family: 'Cairo', Arial, sans-serif;
+      font-size: 1.22em;
+      letter-spacing: .7px;
+      margin: 0;
+      position: fixed;
+      bottom: 0;
+      z-index: 40;
+      box-shadow: 0 6px 80px #00adef35 inset;
+    }
+    .footer-text { margin: 0;}
+    @media (max-width:600px){
+      .header-title{font-size:2.4em;}
+      .header-subtitle{font-size:.99em;}
+      .side-menu{right:6vw;}
+      .menu-btn{font-size:.99em;}
+      #PS4FW{font-size:.93em;}
+      .ps-btn{width:135px;height:135px;}
+    }
+  </style>
+  <script>
+    // نفس سكربت الكاش الخاص بك، من index00 أو index2 (حسب الحاجة)
+    function DLProgress(e){
+      Percent=(Math.round(e.loaded / e.total * 100));
+      document.title="Installing offline cache: " + Percent + "%";
+    }
+    function DisplayCacheProgress(){
+      setTimeout(function(){;document.title="Cache Success !";},1000);
+      setTimeout(function(){window.location.href = document.referrer;},3000);
+    }
+    window.applicationCache.addEventListener("progress",DLProgress,false);
+    window.applicationCache.oncached=function(e){DisplayCacheProgress();};
+    window.applicationCache.onupdateready=function(e){DisplayCacheProgress();};
+  </script>
 </head>
 <body>
 
-    <div id="cache-status">
-        <div id="cache-text">جارٍ فحص الملفات وتحميل الكاش...</div>
-        <div id="cache-bar"></div>
+  <!-- الخلفية BS -->
+  <div class="bg-logo-watermark">BS</div>
+
+  <!-- القائمة الجانبية العصرية -->
+  <div class="side-menu">
+    <button onclick="showpayloads()" class="menu-btn" id="payloadsbtn">البايـلودات</button>
+    <button onclick="showsettings()" class="menu-btn" id="settings-btn">الإعدادات</button>
+    <button onclick="showabout()" class="menu-btn" id="about-btn">حول المتجر</button>
+  </div>
+
+  <!-- المحتوى الأساسي -->
+  <div class="main-container">
+    <div class="header-title">بليغ ستور 2</div>
+    <div class="header-subtitle">BALIGH STORE</div>
+    <div id="PS4FW">PS4 FW: 0.00 | Ready</div>
+    <div id="jailbreak-page">
+      <button id="jailbreak" class="ps-btn">
+        <svg viewBox="0 0 32 32">
+          <path d="M0.69116 21.9548C-0.506476 22.7935 -0.284724 24.2384 2.44769 25.1419C5.18011 26.0455 8.35603 26.2323 11.1505 25.729V22.8774L8.43588 23.8C7.39792 24.1355 6.35997 24.2194 5.32202 23.9677C4.5236 23.7161 4.68328 23.2129 5.64139 22.7935L11.1505 20.7806V17.6774L3.48565 20.4452C2.52754 20.7806 1.56943 21.2839 0.69116 21.9548ZM19.2146 9.37419V17.5097C22.4881 19.1871 25.0431 17.5097 25.0431 13.1484C25.0431 8.70323 23.5261 6.69032 19.1348 5.09677C16.8193 4.25806 14.4241 3.50323 12.0288 3V27.2387L17.6178 29V8.61935C17.6178 7.69677 17.6178 7.02581 18.2565 7.27742C19.1348 7.52903 19.2146 8.45161 19.2146 9.37419ZM29.5941 20.0258C27.2787 19.1871 24.8036 18.8516 22.4083 19.1032C21.0779 19.1906 19.8294 19.5869 18.5759 20.0258V23.2968L23.7656 21.2839C24.8036 20.9484 25.8415 20.8645 26.8795 21.1161C27.6779 21.3677 27.5182 21.871 26.5601 22.2903L18.5759 25.3935V28.5806L29.5941 24.3032C30.3925 23.9677 31.1111 23.5484 31.7499 22.8774C32.3088 22.0387 32.0692 20.8645 29.5941 20.0258Z"></path>
+        </svg>
+      </button>
     </div>
+  </div>
 
-    <div class="bg-logo-watermark">BS</div>
+  <footer class="footer-address">
+      <span>صنعاء - شارع الخمسين - بيت بوس - خلف كافتيريا ركن الأحلام - جوار سوبر ماركت الصخرة</span>
+  </footer>
 
-    <div class="main-container">
-        <div class="header">
-            <h1 class="header-title">بليغ ستور 2</h1>
-            <div class="header-subtitle">BALIGH STORE</div>
-        </div>
-        <h2 id="PS4FW">جاري فحص النظام...</h2>
-        <div id="jailbreak-page">
-            <button id="jailbreak" class="ps-trigger" title="تفعيل الجيلبريك">
-                <svg viewBox="0 0 32 32"><path d="M0.69116 21.9548C-0.506476 22.7935 -0.284724 24.2384 2.44769 25.1419C5.18011 26.0455 8.35603 26.2323 11.1505 25.729V22.8774L8.43588 23.8C7.39792 24.1355 6.35997 24.2194 5.32202 23.9677C4.5236 23.7161 4.68328 23.2129 5.64139 22.7935L11.1505 20.7806V17.6774L3.48565 20.4452C2.52754 20.7806 1.56943 21.2839 0.69116 21.9548ZM19.2146 9.37419V17.5097C22.4881 19.1871 25.0431 17.5097 25.0431 13.1484C25.0431 8.70323 23.5261 6.69032 19.1348 5.09677C16.8193 4.25806 14.4241 3.50323 12.0288 3V27.2387L17.6178 29V8.61935C17.6178 7.69677 17.6178 7.02581 18.2565 7.27742C19.1348 7.52903 19.2146 8.45161 19.2146 9.37419ZM29.5941 20.0258C27.2787 19.1871 24.8036 18.8516 22.4083 19.1032C21.0779 19.1906 19.8294 19.5869 18.5759 20.0258V23.2968L23.7656 21.2839C24.8036 20.9484 25.8415 20.8645 26.8795 21.1161C27.6779 21.3677 27.5182 21.871 26.5601 22.2903L18.5759 25.3935V28.5806L29.5941 24.3032C30.3925 23.9677 31.1111 23.5484 31.7499 22.8774C32.3088 22.0387 32.0692 20.8645 29.5941 20.0258Z"></path></svg>
-            </button>
-        </div>
+  <!-- البوب أب/��لنافذة المنبثقة -->
+  <div class="overlay" id="overlay-popup"></div>
+  <div class="popup" id="about-popup">
+      <h2 style="color: var(--electric-blue);">حول المتجر</h2>
+      <p>بليغ ستور 2 - اليمن، صنعاء</p>
+      <button onclick="closeabout()" class="close-btn"></button>
+  </div>
+  <div class="popup" id="settings-popup">
+      <h2 style="color: var(--electric-blue);">الإعدادات</h2>
+      <button onclick="closesettings()" class="close-btn"></button>
+  </div>
 
-        <div id="payloads-panel" class="payload-panel">
-            <h2>اختر البايلود</h2>
-            <!-- سيتم جلب قائمة البايلود من payloads/payloads.js -->
-            <div id="payloads-list"></div>
-        </div>
-    </div>
-
-    <footer class="footer-address">
-        صنعاء - شارع الخمسين - بيت بوس - خلف كافتيريا ركن الأحلام - جوار سوبر ماركت الصخرة
-    </footer>
-
-    <!-- ملف البايلودات الأساسي الخاص بك -->
-    <script src="payloads/payloads.js"></script>
-    <!-- JS لتكامل عناصر الصفحة مع البايلودات -->
-    <script>
-        // دالة لتحديث نص النظام (يمكنك ربطها بكشف النظام في payloads/payloads.js أو js/index.js)
-        function setSystemVersion(version) {
-            var fw = document.getElementById('PS4FW');
-            if (version) {
-                fw.textContent = "نظامك متوافق: " + version;
-            } else {
-                fw.textContent = "جاري التحقق من توافق النظام...";
-            }
-        }
-        // مثال: ثابت حتى تربطه مع كود الاكتشاف الحركي
-        setSystemVersion('9.00');
-
-        // عند الضغط على زر الجيلبريك
-        document.getElementById('jailbreak').onclick = async function() {
-            // شغل روتين الجيلبريك، إذا عندك دالة في بايلودك استدعيها هنا!
-            if (typeof runJailbreak === 'function') {
-                await runJailbreak();
-            }
-            // ثم اعرض قائمة بايلوداتك
-            document.getElementById('payloads-panel').style.display = "block";
-            // برمجياً: استخرج قائمة البايلودات وعبئها
-            loadPayloadsList();
-        };
-
-        // جلب قائمة البايلودات من ملف js (تحتاج تعريف array أو function في payloads.js)
-        function loadPayloadsList() {
-            var container = document.getElementById('payloads-list');
-            container.innerHTML = '';
-            if (typeof payloadList !== 'undefined' && Array.isArray(payloadList)) {
-                payloadList.forEach(function(pl){
-                    var btn = document.createElement('button');
-                    btn.textContent = pl.label;
-                    btn.className = 'payload-btn';
-                    btn.onclick = function() {
-                        // مثال: تحميل البايلود
-                        if (typeof sendPayload === 'function') {
-                            sendPayload(pl);
-                        }
-                    };
-                    container.appendChild(btn);
-                });
-            } else {
-                container.innerHTML = '<span style="color:#00adef;">لم يتم العثور على بايلودات!</span>';
-            }
-        }
-    </script>
+  <!-- سكربتك الرئيسي (بدون تعديل) -->
+  <script src='./js/index.js'></script>
 </body>
 </html>
